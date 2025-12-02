@@ -2,12 +2,8 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Weekly Athletics Schedule </title>
+  <title>Weekly Athletics Schedule – Landscape</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
-  <!-- PWA -->
-  <link rel="manifest" href="manifest.webmanifest">
-  <meta name="theme-color" content="#c8102e">
 
   <!-- Google Fonts -->
   <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;600;700&family=Bebas+Neue&family=Montserrat:wght@400;600;700&family=Poppins:wght@400;600;700&family=Roboto+Slab:wght@400;600;700&family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
@@ -461,7 +457,7 @@
 </head>
 <body>
 
-<h1>Weekly Athletics </h1>
+<h1>Weekly Athletics – Landscape Builder</h1>
 
 <div class="app">
 
@@ -471,7 +467,7 @@
     <div class="field-row">
       <div class="field-group">
         <label for="schoolName">Main Title (top right)</label>
-        <input id="schoolName" type="text" value="Exampe Exampe Athletics" />
+        <input id="schoolName" type="text" value="Terrell Tiger Athletics" />
       </div>
       <div class="field-group">
         <label for="headlineText">Small Label (top left)</label>
@@ -501,11 +497,11 @@
     <div class="field-row">
       <div class="field-group">
         <label for="sideLine1">Side Text Line 1</label>
-        <input id="sideLine1" type="text" value="Exampe High School" />
+        <input id="sideLine1" type="text" value="Terrell High School" />
       </div>
       <div class="field-group">
         <label for="sideLine2">Side Text Line 2 (Big)</label>
-        <input id="sideLine2" type="text" value="Exampe Athletics" />
+        <input id="sideLine2" type="text" value="Tiger Athletics" />
       </div>
       <div class="field-group">
         <label for="sideLine3">Side Text Line 3 (date/motto)</label>
@@ -603,8 +599,8 @@
       <div class="sched-inner">
         <!-- SIDE BAR -->
         <aside class="side-bar">
-          <div class="side-line small" id="sideLine1Preview">Exampe HIGH SCHOOL</div>
-          <div class="side-line main" id="sideLine2Preview"><span>Exampe</span><span>ATHLETICS</span></div>
+          <div class="side-line small" id="sideLine1Preview">TERRELL HIGH SCHOOL</div>
+          <div class="side-line main" id="sideLine2Preview"><span>TIGER</span><span>ATHLETICS</span></div>
           <div class="side-line small" id="sideLine3Preview"></div>
         </aside>
 
@@ -612,7 +608,7 @@
         <div class="main-panel">
           <div class="top-bar">
             <div id="previewHeadline">THIS WEEK IN</div>
-            <div class="top-bar-title" id="previewSchool">Exampe Exampe ATHLETICS</div>
+            <div class="top-bar-title" id="previewSchool">TERRELL TIGER ATHLETICS</div>
             <div id="previewSubtitle"></div>
           </div>
 
@@ -729,7 +725,6 @@
     const slider = document.getElementById("imageSize");
     const box = document.getElementById("imageBox");
     const size = Number(slider.value);
-
     box.style.width = size + "%";
     box.style.maxWidth = (size * 9.3) + "px";
   }
@@ -757,8 +752,8 @@
     const rangeText = formatDateRange(weekStart, weekEnd);
     document.getElementById("previewSubtitle").textContent = rangeText;
 
-    const side1 = document.getElementById("sideLine1").value || "Exampe High School";
-    const side2Raw = document.getElementById("sideLine2").value || "Exampe Athletics";
+    const side1 = document.getElementById("sideLine1").value || "Terrell High School";
+    const side2Raw = document.getElementById("sideLine2").value || "Tiger Athletics";
     const side3Input = document.getElementById("sideLine3").value;
     const side3 = side3Input || rangeText || "";
 
@@ -899,7 +894,7 @@
 
     let ics = "BEGIN:VCALENDAR\r\n";
     ics += "VERSION:2.0\r\n";
-    ics += "PRODID:-//Exampe Weekly Athletics//EN\r\n";
+    ics += "PRODID:-//Tiger Weekly Athletics//EN\r\n";
 
     // Create one all-day event per day with text
     dayNames.forEach((dayName, index) => {
@@ -925,7 +920,7 @@
 
       ics += "BEGIN:VEVENT\r\n";
       ics += `DTSTAMP:${dtstamp}\r\n`;
-      ics += `UID:${dtStart}-${index}@Exampe-weekly\r\n`;
+      ics += `UID:${dtStart}-${index}@tiger-weekly\r\n`;
       ics += `SUMMARY:${escapeIcsText(summary)}\r\n`;
       ics += `DTSTART;VALUE=DATE:${dtStart}\r\n`;
       ics += `DTEND;VALUE=DATE:${dtEnd}\r\n`;
@@ -952,21 +947,5 @@
   updatePreview();
 </script>
 
-<!-- PWA service worker registration -->
-<script>
-  if ("serviceWorker" in navigator) {
-    window.addEventListener("load", () => {
-      navigator.serviceWorker
-        .register("./service-worker.js")
-        .catch((err) => console.error("SW registration failed", err));
-    });
-  }
-</script>
-
 </body>
 </html>
-
-
-
-
-
