@@ -2,8 +2,12 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Weekly Athletics Schedule </title>
+  <title>Weekly Athletics Schedule</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <!-- PWA -->
+  <link rel="manifest" href="manifest.webmanifest">
+  <meta name="theme-color" content="#c8102e">
 
   <!-- Google Fonts -->
   <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;600;700&family=Bebas+Neue&family=Montserrat:wght@400;600;700&family=Poppins:wght@400;600;700&family=Roboto+Slab:wght@400;600;700&family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
@@ -127,6 +131,7 @@
       flex-direction: column;
       gap: 0.4rem;
       margin-top: 0.4rem;
+      flex-wrap: wrap;
     }
 
     @media (min-width: 640px) {
@@ -334,8 +339,6 @@
       border: none;
       border-radius: 12px;
       z-index: 2;
-
-      /* size overridden by slider */
       width: 28%;
       max-width: 260px;
       aspect-ratio: 4 / 3;
@@ -374,7 +377,7 @@
       transform: none;
     }
 
-    /* Layout 2 – Top Banner, grid below, image in upper right */
+    /* Layout 2 – Top Banner */
     .schedule.layout-2 .sched-inner {
       flex-direction: column;
     }
@@ -412,7 +415,7 @@
       }
     }
 
-    /* Layout 3 – Image Left, content shifted right into that space */
+    /* Layout 3 – Image Left, content shifted right */
     .schedule.layout-3 .sched-inner {
       flex-direction: row;
     }
@@ -422,7 +425,7 @@
     }
 
     .schedule.layout-3 .main-panel {
-      margin-left: 28%; /* leaves a “space” on the left for the picture */
+      margin-left: 28%;
     }
 
     .schedule.layout-3 .schedule-grid {
@@ -458,7 +461,7 @@
 </head>
 <body>
 
-<h1>Weekly Athletics Calendar </h1>
+<h1>Weekly Athletics </h1>
 
 <div class="app">
 
@@ -468,7 +471,7 @@
     <div class="field-row">
       <div class="field-group">
         <label for="schoolName">Main Title (top right)</label>
-        <input id="schoolName" type="text" value="Example Athletics" />
+        <input id="schoolName" type="text" value="Exampe Exampe Athletics" />
       </div>
       <div class="field-group">
         <label for="headlineText">Small Label (top left)</label>
@@ -498,11 +501,11 @@
     <div class="field-row">
       <div class="field-group">
         <label for="sideLine1">Side Text Line 1</label>
-        <input id="sideLine1" type="text" value="Example High School" />
+        <input id="sideLine1" type="text" value="Exampe High School" />
       </div>
       <div class="field-group">
         <label for="sideLine2">Side Text Line 2 (Big)</label>
-        <input id="sideLine2" type="text" value="Example Athletics" />
+        <input id="sideLine2" type="text" value="Exampe Athletics" />
       </div>
       <div class="field-group">
         <label for="sideLine3">Side Text Line 3 (date/motto)</label>
@@ -591,6 +594,7 @@
       <button id="updateBtn">Update Preview</button>
       <button id="downloadJpgBtn" class="button-secondary">Download JPG</button>
       <button id="downloadPdfBtn" class="button-secondary">Download PDF</button>
+      <button id="downloadIcsBtn" class="button-secondary">Download Google Calendar (.ics)</button>
     </div>
   </div>
 
@@ -599,8 +603,8 @@
       <div class="sched-inner">
         <!-- SIDE BAR -->
         <aside class="side-bar">
-          <div class="side-line small" id="sideLine1Preview">Example HIGH SCHOOL</div>
-          <div class="side-line main" id="sideLine2Preview"><span>Example</span><span>ATHLETICS</span></div>
+          <div class="side-line small" id="sideLine1Preview">Exampe HIGH SCHOOL</div>
+          <div class="side-line main" id="sideLine2Preview"><span>Exampe</span><span>ATHLETICS</span></div>
           <div class="side-line small" id="sideLine3Preview"></div>
         </aside>
 
@@ -608,7 +612,7 @@
         <div class="main-panel">
           <div class="top-bar">
             <div id="previewHeadline">THIS WEEK IN</div>
-            <div class="top-bar-title" id="previewSchool">Example ATHLETICS</div>
+            <div class="top-bar-title" id="previewSchool">Exampe Exampe ATHLETICS</div>
             <div id="previewSubtitle"></div>
           </div>
 
@@ -724,10 +728,10 @@
   function updateImageSize() {
     const slider = document.getElementById("imageSize");
     const box = document.getElementById("imageBox");
-    const size = Number(slider.value); // 10–60
+    const size = Number(slider.value);
 
     box.style.width = size + "%";
-    box.style.maxWidth = (size * 9.3) + "px"; // roughly scaled from 28 -> 260
+    box.style.maxWidth = (size * 9.3) + "px";
   }
 
   function updateLayout() {
@@ -753,8 +757,8 @@
     const rangeText = formatDateRange(weekStart, weekEnd);
     document.getElementById("previewSubtitle").textContent = rangeText;
 
-    const side1 = document.getElementById("sideLine1").value || "Example High School";
-    const side2Raw = document.getElementById("sideLine2").value || "Example Athletics";
+    const side1 = document.getElementById("sideLine1").value || "Exampe High School";
+    const side2Raw = document.getElementById("sideLine2").value || "Exampe Athletics";
     const side3Input = document.getElementById("sideLine3").value;
     const side3 = side3Input || rangeText || "";
 
@@ -845,12 +849,123 @@
   document.getElementById("downloadJpgBtn").addEventListener("click", () => saveSchedule("jpg"));
   document.getElementById("downloadPdfBtn").addEventListener("click", () => saveSchedule("pdf"));
 
+  // ---- Google Calendar (.ics) generation ----
+
+  function pad2(n) {
+    return n < 10 ? "0" + n : "" + n;
+  }
+
+  function formatDateForIcs(date) {
+    const y = date.getFullYear();
+    const m = pad2(date.getMonth() + 1);
+    const d = pad2(date.getDate());
+    return `${y}${m}${d}`;
+  }
+
+  function formatDateTimeUtcForIcs(date) {
+    const y = date.getUTCFullYear();
+    const m = pad2(date.getUTCMonth() + 1);
+    const d = pad2(date.getUTCDate());
+    const hh = pad2(date.getUTCHours());
+    const mm = pad2(date.getUTCMinutes());
+    const ss = pad2(date.getUTCSeconds());
+    return `${y}${m}${d}T${hh}${mm}${ss}Z`;
+  }
+
+  function escapeIcsText(str) {
+    return str
+      .replace(/\\/g, "\\\\")
+      .replace(/,/g, "\\,")
+      .replace(/;/g, "\\;")
+      .replace(/\r?\n/g, "\\n");
+  }
+
+  function downloadIcs() {
+    const weekStartStr = document.getElementById("weekStart").value;
+    if (!weekStartStr) {
+      alert("Please select a Week Start date before exporting to Google Calendar.");
+      return;
+    }
+    const base = parseLocalDate(weekStartStr);
+    if (!base || isNaN(base)) {
+      alert("Invalid Week Start date.");
+      return;
+    }
+
+    const now = new Date();
+    const dtstamp = formatDateTimeUtcForIcs(now);
+    const schoolName = document.getElementById("schoolName").value || "Athletics";
+    const infoText = document.getElementById("infoTextInput").value.trim();
+
+    let ics = "BEGIN:VCALENDAR\r\n";
+    ics += "VERSION:2.0\r\n";
+    ics += "PRODID:-//Exampe Weekly Athletics//EN\r\n";
+
+    // Create one all-day event per day with text
+    dayNames.forEach((dayName, index) => {
+      const eventsText = document.getElementById("day-" + index).value.trim();
+      if (!eventsText) return;
+
+      const eventDate = new Date(base);
+      eventDate.setDate(base.getDate() + index);
+
+      const dtStart = formatDateForIcs(eventDate);
+
+      const dtEndDate = new Date(eventDate);
+      dtEndDate.setDate(eventDate.getDate() + 1);
+      const dtEnd = formatDateForIcs(dtEndDate);
+
+      const firstLine = eventsText.split(/\r?\n/)[0].trim() || `${dayName} Athletics`;
+      const summary = `${schoolName} – ${dayName}: ${firstLine}`.slice(0, 120);
+
+      let desc = eventsText;
+      if (infoText) {
+        desc += "\n\nImportant Info:\n" + infoText;
+      }
+
+      ics += "BEGIN:VEVENT\r\n";
+      ics += `DTSTAMP:${dtstamp}\r\n`;
+      ics += `UID:${dtStart}-${index}@Exampe-weekly\r\n`;
+      ics += `SUMMARY:${escapeIcsText(summary)}\r\n`;
+      ics += `DTSTART;VALUE=DATE:${dtStart}\r\n`;
+      ics += `DTEND;VALUE=DATE:${dtEnd}\r\n`;
+      ics += `DESCRIPTION:${escapeIcsText(desc)}\r\n`;
+      ics += "END:VEVENT\r\n";
+    });
+
+    ics += "END:VCALENDAR\r\n";
+
+    const blob = new Blob([ics], { type: "text/calendar;charset=utf-8" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = "weekly-schedule.ics";
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  }
+
+  document.getElementById("downloadIcsBtn").addEventListener("click", downloadIcs);
+
   // Initial render
   updatePreview();
 </script>
 
+<!-- PWA service worker registration -->
+<script>
+  if ("serviceWorker" in navigator) {
+    window.addEventListener("load", () => {
+      navigator.serviceWorker
+        .register("./service-worker.js")
+        .catch((err) => console.error("SW registration failed", err));
+    });
+  }
+</script>
+
 </body>
 </html>
+
 
 
 
